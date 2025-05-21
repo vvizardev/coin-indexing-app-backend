@@ -1,0 +1,223 @@
+openapi: 3.0.1
+
+info:
+  title: Coin Index Test
+  version: 1.0.0
+
+tags:
+- name: Trending
+
+paths:
+  /api/v1/trending:
+    get:
+      summary: Get trending SOL pools
+      description: >
+        Fetch trending SOL-based liquidity pools with support for pagination and sorting. Useful for discovering high-activity tokens and analyzing market trends.
+      tags:
+      - Trending
+      parameters:
+      - name: limit
+        in: query
+        description: Number of records to return per request
+        required: false
+        schema:
+          type: integer
+          enum: [10, 25, 50, 100]
+          default: 100
+        example: 50
+
+      - name: offset
+        in: query
+        description: Offset index for paginated results
+        required: false
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+        example: 0
+
+      - name: orderBy
+        in: query
+        description: Field to sort by (select from available options)
+        required: false
+        schema:
+          type: string
+          enum:
+          - tradeCount
+          - marketCap
+          - updatedAt
+          - liquidUsd
+          - priceUsd
+          default: tradeCount
+        example: marketCap
+
+      - name: orderDirection
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        example: asc
+
+      responses:
+        '200':
+          description: Trending pool data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolsResponse'
+
+        '400':
+          description: Invalid request parameters
+
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    PoolReport:
+      type: object
+      properties:
+        interval:
+          type: string
+          example: "24h"
+        buyVolume:
+          type: string
+          example: "24145.22"
+        sellVolume:
+          type: string
+          example: "23083.05"
+        buyCount:
+          type: integer
+          example: 360712
+        sellCount:
+          type: integer
+          example: 363286
+        traderCount:
+          type: integer
+          example: 194
+        buyerCount:
+          type: integer
+          example: 140
+        sellerCount:
+          type: integer
+          example: 127
+        priceChangePercent:
+          type: string
+          example: "7.49"
+
+    TokenInfo:
+      type: object
+      properties:
+        symbol:
+          type: string
+          example: "PIPE"
+        name:
+          type: string
+          example: "PIPE"
+        freezable:
+          type: boolean
+          example: false
+        mintable:
+          type: boolean
+          example: false
+        logoUri:
+          type: string
+          format: uri
+          example: "https://cdn.mevx.io/token-logo/1744684339-3T721bpRc5FNY84W36vWffxoKs4FLXhBpSaqwUCRpump.png"
+        totalSupply:
+          type: string
+          example: "0"
+        top10HoldersPercent:
+          type: string
+          example: "24.19"
+        audit:
+          type: object
+          example: {}
+        holding:
+          type: object
+          properties:
+            totalInsiderWallet:
+              type: integer
+              example: 2
+            totalInsiderWalletHold:
+              type: integer
+              example: 0
+            totalHolder:
+              type: integer
+              example: 3629
+
+    Pool:
+      type: object
+      properties:
+        poolAddress:
+          type: string
+        chain:
+          type: string
+        status:
+          type: string
+        preFactory:
+          type: string
+        factory:
+          type: string
+        router:
+          type: string
+        baseToken:
+          type: string
+        quoteToken:
+          type: string
+        baseAmount:
+          type: string
+        baseAmountUsd:
+          type: string
+        quoteAmount:
+          type: string
+        quoteAmountUsd:
+          type: string
+        priceQuote:
+          type: string
+        priceUsd:
+          type: string
+        liquidUsd:
+          type: string
+        initialQuoteAmount:
+          type: string
+        initialLiquidUsd:
+          type: string
+        liquidChangePercent:
+          type: string
+        marketCap:
+          type: string
+        lpBurnedPercent:
+          type: string
+        metadata:
+          type: object
+          example: {}
+        audit:
+          type: object
+          example: {}
+        poolReports:
+          type: array
+          items:
+            $ref: '#/components/schemas/PoolReport'
+        baseTokenInfo:
+          $ref: '#/components/schemas/TokenInfo'
+        quoteTokenInfo:
+          $ref: '#/components/schemas/TokenInfo'
+        createdAt:
+          type: integer
+          example: 1740314397
+        updatedAt:
+          type: integer
+          example: 1747854385
+
+    PoolsResponse:
+      type: object
+      properties:
+        pools:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pool'
