@@ -40,7 +40,23 @@ const respondAPIMsg = async (msgId: number, title: Object, status: "success" | "
     })
 }
 
+const savetojson = (data: any, filename: string) => {
+    const fs = require('fs');
+    const path = require('path');
+
+    const filePath = path.join(__dirname, filename);
+
+    fs.writeFile(filePath, JSON.stringify(data, null, 2), (err: any) => {
+        if (err) {
+            console.error('Error writing file:', err);
+        } else {
+            console.log(`File ${filename} has been saved.`);
+        }
+    });
+}
+
 export {
     requestAPIMsg,
-    respondAPIMsg
+    respondAPIMsg,
+    savetojson
 }

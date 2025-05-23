@@ -7,6 +7,7 @@ import path from 'path';
 import http from 'http';
 import { PORT } from './config';
 import trendingRoute from './routes/TrendingRoute';
+import TrackerRoute from './routes/TrackerRoute';
 
 const swaggerPath = path.resolve(__dirname, '../swagger.yaml');
 const swaggerDocument: any = YAML.load(swaggerPath);
@@ -22,6 +23,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use("/api/v1/trending", trendingRoute);
+app.use("/api/v1/tracker", TrackerRoute);
 
 // Set up Swagger
 app.use(

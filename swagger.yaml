@@ -76,6 +76,164 @@ paths:
         '500':
           description: Internal server error
 
+  /api/v1/tracker/trending:
+    get:
+      summery: Get trending SOL tokens
+      description: >
+        Fetch trending tokens based on timeframe (5m, 15m, 30m, 1h (default), 2h, 3h, 4h, 5h, 6h, 12h, 24h)
+      tags:
+      - Trending(tracker)
+      parameters:
+      - name: timeframe
+        in: query
+        description: Timeframe for trending tokens
+        required: false
+        schema:
+          type: string
+          enum:
+          - 5m
+          - 15m
+          - 30m
+          - 1h
+          - 2h
+          - 3h
+          - 4h
+          - 5h
+          - 6h
+          - 12h
+          - 24h
+        default: 1h
+
+      responses:
+        '200':
+          description: Trending pool data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+
+        '400':
+          description: Invalid request parameters
+
+        '500':
+          description: Internal server error
+
+  /api/v1/tracker/tokens/volume:
+    get:
+      summary: Get tokens by volume
+      description: >
+        Fetch tokens based on volume data. This endpoint is useful for analyzing token performance and liquidity.
+      tags:
+      - Tokens by volume(tracker)
+      parameters:
+      - name: timeframe
+        in: query
+        description: Timeframe for tokens by volume
+        required: false
+        schema:
+          type: string
+          enum:
+          - 5m
+          - 15m
+          - 30m
+          - 1h
+          - 2h
+          - 3h
+          - 4h
+          - 5h
+          - 6h
+          - 12h
+          - 24h
+        default: 1h
+
+      responses:
+        '200':
+          description: Tokens by volume data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+
+        '400':
+          description: Invalid request parameters
+
+        '500':
+          description: Internal server error
+
+
+  /api/v1/tracker/tokens/multi:
+    get:
+      summary: Get tokens by multi
+      description: >
+        Gets an overview of latest, graduating, and graduated tokens (Pumpvision / Photon Memescope style).
+      tags:
+      - Tokens by multi(tracker)
+
+      responses:
+        '200':
+          description: Tokens by multi data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiResponse'
+
+        '400':
+          description: Invalid request parameters
+
+        '500':
+          description: Internal server error
+
+  /api/v1/tracker/tokens/latest:
+    get:
+      summary: Get tokens by latest
+      description: >
+        Get latest 100 tokens
+      tags:
+      - Tokens by latest(tracker)
+      parameters:
+      - name: page
+        in: query
+        description: Page for latest tokens
+        required: false
+        default: 1
+
+      responses:
+        '200':
+          description: Tokens by latest data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+
+        '400':
+          description: Invalid request parameters
+
+        '500':
+          description: Internal server error
+
+  /api/v1/tracker/tokens/graduated:
+    get:
+      summary: Get graduated tokens
+      description: >
+        Get graduated tokens
+      tags:
+      - Graduated tokens(tracker)
+
+      responses:
+        '200':
+          description: Graduated tokens data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+
+        '400':
+          description: Invalid request parameters
+
+        '500':
+          description: Internal server error
+
+
 components:
   schemas:
     PoolReport:
@@ -221,3 +379,261 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Pool'
+    Token:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "gib"
+        symbol:
+          type: string
+          example: "gib"
+        mint:
+          type: string
+          example: "6FtbGaqgZzti1TxJksBV4PSya5of9VqA9vJNDxPwbonk"
+        uri:
+          type: string
+          example: "https://ipfs-forward.solanatracker.io/ipfs/bafkreih4j3s54p2xqwcvkcncfdr22myhqff4wndubhdptzze6ye3gnr53m"
+        decimals:
+          type: integer
+          example: 6
+        isMutable:
+          type: boolean
+          example: false
+        description:
+          type: string
+          example: "live, laugh, gib."
+        createdOn:
+          type: string
+          example: "https://bonk.fun"
+        image:
+          type: string
+          example: "https://image.solanatracker.io/proxy?url=https%3A%2F%2Fipfs.io%2Fipfs%2Fbafybeihv3slvo42oeicwuds4752qjwkoeo6b32qqdadfxl5zdsdj4rflzi"
+        hasFileMetaData:
+          type: boolean
+          example: true
+
+    Liquidity:
+      type: object
+      properties:
+        quote:
+          type: number
+          example: 1790.053155746
+        usd:
+          type: number
+          example: 326658.95498889976
+
+    Price:
+      type: object
+      properties:
+        quote:
+          type: number
+          example: 0.00003383261736228445
+        usd:
+          type: number
+          example: 0.006173966061637631
+
+    MarketCap:
+      type: object
+      properties:
+        quote:
+          type: number
+          example: 33832.59968249126
+        usd:
+          type: number
+          example: 6173962.835329658
+
+    Security:
+      type: object
+      properties:
+        freezeAuthority:
+          type: string
+          nullable: true
+          example: null
+        mintAuthority:
+          type: string
+          nullable: true
+          example: null
+
+    Transactions:
+      type: object
+      properties:
+        buys:
+          type: integer
+          example: 27973
+        total:
+          type: integer
+          example: 56932
+        volume:
+          type: integer
+          example: 15507506
+        sells:
+          type: integer
+          example: 28959
+
+    Pool:
+      type: object
+      properties:
+        liquidity:
+          $ref: '#/components/schemas/Liquidity'
+        price:
+          $ref: '#/components/schemas/Price'
+        tokenSupply:
+          type: number
+          example: 999999477.433478
+        lpBurn:
+          type: integer
+          example: 81
+        tokenAddress:
+          type: string
+          example: "6FtbGaqgZzti1TxJksBV4PSya5of9VqA9vJNDxPwbonk"
+        marketCap:
+          $ref: '#/components/schemas/MarketCap'
+        market:
+          type: string
+          example: "raydium-cpmm"
+        quoteToken:
+          type: string
+          example: "So11111111111111111111111111111111111111112"
+        decimals:
+          type: integer
+          example: 6
+        security:
+          $ref: '#/components/schemas/Security'
+        deployer:
+          type: string
+          example: "WLHv2UAZm6z4KyaaELi5pjdbJh6RESMva1Rnn8pJVVh"
+        lastUpdated:
+          type: integer
+          format: int64
+          example: 1748014643400
+        createdAt:
+          type: integer
+          format: int64
+          example: 1747934785863
+        txns:
+          $ref: '#/components/schemas/Transactions'
+        poolId:
+          type: string
+          example: "5bsguj2UESRSDpJ1hEbXBKs1wa2pp9METMK3LNQME7Tw"
+
+    TimePeriodEvent:
+      type: object
+      properties:
+        priceChangePercentage:
+          type: number
+          example: -9.657465782035299
+
+    Events:
+      type: object
+      properties:
+        1m:
+          $ref: '#/components/schemas/TimePeriodEvent'
+        5m:
+          $ref: '#/components/schemas/TimePeriodEvent'
+        15m:
+          $ref: '#/components/schemas/TimePeriodEvent'
+        30m:
+          $ref: '#/components/schemas/TimePeriodEvent'
+        1h:
+          $ref: '#/components/schemas/TimePeriodEvent'
+        2h:
+          $ref: '#/components/schemas/TimePeriodEvent'
+        3h:
+          $ref: '#/components/schemas/TimePeriodEvent'
+        4h:
+          $ref: '#/components/schemas/TimePeriodEvent'
+        5h:
+          $ref: '#/components/schemas/TimePeriodEvent'
+        6h:
+          $ref: '#/components/schemas/TimePeriodEvent'
+        12h:
+          $ref: '#/components/schemas/TimePeriodEvent'
+        24h:
+          $ref: '#/components/schemas/TimePeriodEvent'
+
+    RiskItem:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "No social media"
+        description:
+          type: string
+          example: "This token has no social media links"
+        level:
+          type: string
+          example: "warning"
+        score:
+          type: integer
+          example: 2000
+
+    Risk:
+      type: object
+      properties:
+        rugged:
+          type: boolean
+          example: false
+        risks:
+          type: array
+          items:
+            $ref: '#/components/schemas/RiskItem'
+        score:
+          type: integer
+          example: 2
+
+    TokenData:
+      type: object
+      properties:
+        token:
+          $ref: '#/components/schemas/Token'
+        pools:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pool'
+        events:
+          $ref: '#/components/schemas/Events'
+        risk:
+          $ref: '#/components/schemas/Risk'
+        buysCount:
+          type: integer
+          example: 946
+        sellsCount:
+          type: integer
+          example: 960
+
+    TokenResponse:
+      type: object
+      properties:
+        token:
+          $ref: '#/components/schemas/TokenData'
+        pools:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pool'
+        events:
+          $ref: '#/components/schemas/Events'
+        risk:
+          $ref: '#/components/schemas/Risk'
+        buysCount:
+          type: integer
+          example: 946
+        sellsCount:
+          type: integer
+          example: 960
+
+    MultiResponse:
+      type: object
+      properties:
+        latest:
+          type: array
+          items:
+            $ref: '#/components/schemas/TokenResponse'
+        graduating:
+          type: array
+          items:
+            $ref: '#/components/schemas/TokenResponse'
+        graduated:
+          type: array
+          items:
+            $ref: '#/components/schemas/TokenResponse'

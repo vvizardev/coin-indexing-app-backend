@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { requestAPIMsg, respondAPIMsg } from "../../utils";
-import { fetchPools } from "../../api";
+import { fetchTrendingTokens, fetchPools } from "../../api";
 import axios from "axios";
 
 const TrendingRoute = Router();
@@ -11,9 +11,9 @@ TrendingRoute.get('/', async (req: any, res: any) => {
         method: "GET",
     })
 
-    console.log(req.query);
-
     const { limit, offset, orderBy, orderDirection } = req.query
+
+    // const data = await fetchTrendingTokens();
 
     const data = await fetchPools({
         chain: 'sol',
@@ -26,14 +26,8 @@ TrendingRoute.get('/', async (req: any, res: any) => {
         orderBy: 'tradeCount desc',
         context: 'trending',
     })
-
-    // createdAt
-    // priceChange
-
-    await respondAPIMsg(msgId, {
-        message: data?.length,
-    })
-    res.json({ message: data });
+    res.json(data);
 });
+
 
 export default TrendingRoute;

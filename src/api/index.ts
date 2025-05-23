@@ -1,5 +1,12 @@
 import axios from "axios";
 import { ApiResponse, FetchPoolsParams, Pool } from "../types/pools";
+import { Client } from "@solana-tracker/data-api";
+import { SOLANA_TRACKER_API_KEY, SOLANA_TRACKER_BASE_URL } from "../config";
+import { savetojson } from "../utils";
+
+const client = new Client({
+    apiKey: SOLANA_TRACKER_API_KEY,
+})
 
 // const data = await axios.get('https://api.mevx.io/api/v1/pools', {
 //     params: {
@@ -35,6 +42,81 @@ export async function fetchPools(params: FetchPoolsParams): Promise<Pool[] | und
         });
 
         return response.data.pools;
+    } catch (error) {
+        console.error('Error fetching pools:', error);
+        return undefined;
+    }
+}
+
+export async function fetchTrendingTokens(timeframe: string) {
+    try {
+        const res = await axios.get(SOLANA_TRACKER_BASE_URL + `/tokens/trending/${timeframe}`, {
+            headers: {
+                "x-api-key" : SOLANA_TRACKER_API_KEY,
+            }
+        });
+        const tokens = res.data;
+        return tokens;
+    } catch (error) {
+        console.error('Error fetching pools:', error);
+        return undefined;
+    }
+}
+
+export async function fetchTokensByVolume(timeframe: string) {
+    try {
+        const res = await axios.get(SOLANA_TRACKER_BASE_URL + `/tokens/trending/${timeframe}`, {
+            headers: {
+                "x-api-key" : SOLANA_TRACKER_API_KEY,
+            }
+        });
+        const tokens = res.data;
+        return tokens;
+    } catch (error) {
+        console.error('Error fetching pools:', error);
+        return undefined;
+    }
+}
+
+export async function fetchTokensMultiAll() {
+    try {
+        const res = await axios.get(SOLANA_TRACKER_BASE_URL + `/tokens/multi/all`, {
+            headers: {
+                "x-api-key" : SOLANA_TRACKER_API_KEY,
+            }
+        });
+        const tokens = res.data;
+        return tokens;
+    } catch (error) {
+        console.error('Error fetching pools:', error);
+        return undefined;
+    }
+}
+
+export async function fetchTokensLatest(page: number) {
+    try {
+        const res = await axios.get(SOLANA_TRACKER_BASE_URL + `/tokens/latest?page=${page}`, {
+            headers: {
+                "x-api-key" : SOLANA_TRACKER_API_KEY,
+            }
+        });
+        const tokens = res.data;
+        return tokens;
+    } catch (error) {
+        console.error('Error fetching pools:', error);
+        return undefined;
+    }
+}
+
+export async function fetchTokensGraduated() {
+    try {
+        const res = await axios.get(SOLANA_TRACKER_BASE_URL + `/tokens/multi/graduated`, {
+            headers: {
+                "x-api-key" : SOLANA_TRACKER_API_KEY,
+            }
+        });
+        const tokens = res.data;
+        return tokens;
     } catch (error) {
         console.error('Error fetching pools:', error);
         return undefined;
