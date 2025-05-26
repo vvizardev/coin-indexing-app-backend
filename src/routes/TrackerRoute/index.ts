@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { requestAPIMsg } from "../../utils";
-import { fetchTrendingTokens, fetchPools, fetchTokensByVolume, fetchTokensMultiAll, fetchTokensLatest, fetchTokensGraduated } from "../../api";
+import { fetchTrendingTokens, fetchPools, fetchTokensByVolume, fetchTokensMultiAll, fetchTokensLatest, fetchTokensGraduated, fetchTokenDetails } from "../../api";
 import axios from "axios";
 
 const TrackerRoute = Router();
@@ -59,5 +59,21 @@ TrackerRoute.get("/tokens/graduated", async (req: any, res: any) => {
     const tokens = await fetchTokensGraduated();
     res.json(tokens);
 });
+
+TrackerRoute.get("/tokens/:address", async (req: any, res: any) => {
+    const address = req.params.address;
+    console.log("🚀 ~ TrackerRoute.get ~ address:", address)
+    await requestAPIMsg({
+        url: `/api/v1/tracker/tokens/${address}`,
+        method: "GET",
+    });
+
+    try {
+        const tokenInfo = await fetchTokenDetails(address);
+        res.json(tokenInfo);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch token' });
+    }
+})
 
 export default TrackerRoute;

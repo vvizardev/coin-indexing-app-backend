@@ -160,7 +160,6 @@ paths:
         '500':
           description: Internal server error
 
-
   /api/v1/tracker/tokens/multi:
     get:
       summary: Get tokens by multi
@@ -233,6 +232,35 @@ paths:
         '500':
           description: Internal server error
 
+  /api/v1/tracker/tokens/{tokenAddress}:
+    get:
+      summary: Get token details by address
+      description: >
+        Get token details by its address. This endpoint provides comprehensive information about a specific token, including its market data, security features, and transaction history.
+      tags:
+      - Get token details (tracker)
+      parameters:
+      - name: tokenAddress
+        in: path
+        description: The address of the token to retrieve details for 
+        required: true
+        schema:
+          type: string
+          example: "6FtbGaqgZzti1TxJksBV4PSya5of9VqA9vJNDxPwbonk"
+
+      responses:
+        '200':
+          description: Token details data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenData'
+
+        '400':
+          description: Invalid request parameters
+
+        '500':
+          description: Internal server error
 
 components:
   schemas:

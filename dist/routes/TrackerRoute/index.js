@@ -56,4 +56,19 @@ TrackerRoute.get("/tokens/graduated", (req, res) => __awaiter(void 0, void 0, vo
     const tokens = yield (0, api_1.fetchTokensGraduated)();
     res.json(tokens);
 }));
+TrackerRoute.get("/tokens/:address", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const address = req.params.address;
+    console.log("🚀 ~ TrackerRoute.get ~ address:", address);
+    yield (0, utils_1.requestAPIMsg)({
+        url: `/api/v1/tracker/tokens/${address}`,
+        method: "GET",
+    });
+    try {
+        const tokenInfo = yield (0, api_1.fetchTokenDetails)(address);
+        res.json(tokenInfo);
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Failed to fetch token' });
+    }
+}));
 exports.default = TrackerRoute;

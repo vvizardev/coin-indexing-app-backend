@@ -122,3 +122,19 @@ export async function fetchTokensGraduated() {
         return undefined;
     }
 }
+
+export async function fetchTokenDetails(tokenAddress: string) {
+    console.log("🚀 ~ fetchTokenDetails ~ tokenAddress:", tokenAddress)
+    try {
+        const res = await axios.get(SOLANA_TRACKER_BASE_URL + `/tokens/${tokenAddress}`, {
+            headers: {
+                "x-api-key" : SOLANA_TRACKER_API_KEY,
+            }
+        });
+        const tokenDetails = res.data;
+        return tokenDetails;
+    } catch (error) {
+        console.error('Error fetching token details:', error);
+        return undefined;
+    }
+}

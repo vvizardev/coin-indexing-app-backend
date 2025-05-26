@@ -18,6 +18,7 @@ exports.fetchTokensByVolume = fetchTokensByVolume;
 exports.fetchTokensMultiAll = fetchTokensMultiAll;
 exports.fetchTokensLatest = fetchTokensLatest;
 exports.fetchTokensGraduated = fetchTokensGraduated;
+exports.fetchTokenDetails = fetchTokenDetails;
 const axios_1 = __importDefault(require("axios"));
 const data_api_1 = require("@solana-tracker/data-api");
 const config_1 = require("../config");
@@ -144,6 +145,24 @@ function fetchTokensGraduated() {
         }
         catch (error) {
             console.error('Error fetching pools:', error);
+            return undefined;
+        }
+    });
+}
+function fetchTokenDetails(tokenAddress) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log("🚀 ~ fetchTokenDetails ~ tokenAddress:", tokenAddress);
+        try {
+            const res = yield axios_1.default.get(config_1.SOLANA_TRACKER_BASE_URL + `/tokens/${tokenAddress}`, {
+                headers: {
+                    "x-api-key": config_1.SOLANA_TRACKER_API_KEY,
+                }
+            });
+            const tokenDetails = res.data;
+            return tokenDetails;
+        }
+        catch (error) {
+            console.error('Error fetching token details:', error);
             return undefined;
         }
     });
