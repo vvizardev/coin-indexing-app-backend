@@ -8,7 +8,7 @@ A fast and scalable backend service for indexing new and updated tokens on the S
 - 🔁 Monitor for token updates (price, liquidity, holders, etc.)
 - 📬 Send Telegram alerts for new token listings
 - 📘 Swagger UI for API documentation
-- 🛠️ Written in Node.js / TypeScript (or Rust with Axum, depending on your stack)
+- 🛠️ Written in Node.js / TypeScript
 - ⚡ PostgreSQL or Redis for persistent storage
 
 ---
